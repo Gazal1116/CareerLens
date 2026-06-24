@@ -8,7 +8,6 @@ const protect = require("./middleware/authMiddleware");
 const Resume = require("./models/resumeModel");
 const upload = require("./middleware/uploadMiddleware");
 const Portfolio = require("./models/portfolioModel");
-
 const app = express();
 
 // Middlewares
@@ -20,7 +19,7 @@ app.use("/uploads", express.static("uploads"));
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log(err));
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // Routes
 app.post("/api/auth/signup", signup);
