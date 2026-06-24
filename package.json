@@ -6,6 +6,6 @@
 
   },
     "scripts": {
-    "start": "node /backend/app.js"
+    "start": "node Backend/app.js"
   }
 }
