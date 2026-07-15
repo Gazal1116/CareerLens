@@ -39,7 +39,7 @@ function PortfolioPage() {
 
   const fetchMyPortfolios = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/portfolio/my", {
+      const res = await fetch("https://careerlens-1-2gm0.onrender.com/api/portfolio/my", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -51,7 +51,7 @@ function PortfolioPage() {
 
   const fetchAllPortfolios = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/portfolio");
+      const res = await fetch("https://careerlens-1-2gm0.onrender.com/api/portfolio");
       const data = await res.json();
       setAllPortfolios(data.portfolios || []);
     } catch (error) {
@@ -82,7 +82,7 @@ function PortfolioPage() {
 
     try {
       setLoadingStates((prev) => ({ ...prev, upload: true }));
-      const res = await fetch("http://localhost:5000/api/portfolio/upload", {
+      const res = await fetch("https://careerlens-1-2gm0.onrender.com/api/portfolio/upload", {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: uploadFormData,
@@ -117,7 +117,7 @@ function PortfolioPage() {
     try {
       setLoadingStates((prev) => ({ ...prev, edit: true }));
       const res = await fetch(
-        `http://localhost:5000/api/portfolio/${editingId}`,
+        `https://careerlens-1-2gm0.onrender.com/api/portfolio/${editingId}`,
         {
           method: "PUT",
           headers: {
@@ -151,7 +151,7 @@ function PortfolioPage() {
 
     try {
       setLoadingStates((prev) => ({ ...prev, delete: id }));
-      const res = await fetch(`http://localhost:5000/api/portfolio/${id}`, {
+      const res = await fetch(`https://careerlens-1-2gm0.onrender.com/api/portfolio/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -172,7 +172,7 @@ function PortfolioPage() {
   const handleLike = async (id) => {
     try {
       setLoadingStates((prev) => ({ ...prev, [id]: true }));
-      const res = await fetch(`http://localhost:5000/api/portfolio/${id}/like`, {
+      const res = await fetch(`https://careerlens-1-2gm0.onrender.com/api/portfolio/${id}/like`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -198,7 +198,7 @@ function PortfolioPage() {
     try {
       setLoadingStates((prev) => ({ ...prev, [`rate-${id}`]: true }));
       const res = await fetch(
-        `http://localhost:5000/api/portfolio/${id}/rate`,
+        `https://careerlens-1-2gm0.onrender.com/api/portfolio/${id}/rate`,
         {
           method: "POST",
           headers: {

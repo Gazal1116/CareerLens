@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config";
 
 function PortfolioPage() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ function PortfolioPage() {
       setLoading(true);
       setError(null);
       const token = localStorage.getItem("token");
-      const res = await axios.get("https://careerlens-1-2gm0.onrender.com/api/portfolio", {
+      const res = await axios.get(`${API_BASE_URL}/api/portfolio`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -56,7 +57,7 @@ function PortfolioPage() {
 
       if (editId) {
         await axios.put(
-          `https://careerlens-1-2gm0.onrender.com/api/portfolio/${editId}`,
+          `${API_BASE_URL}/api/portfolio/${editId}`,
           { title, description },
           {
             headers: {
@@ -70,7 +71,7 @@ function PortfolioPage() {
           alert("Please select a PDF file to upload");
           return;
         }
-        await axios.post("https://careerlens-1-2gm0.onrender.com/api/portfolio/upload", formData, {
+        await axios.post(`${API_BASE_URL}/api/portfolio/upload`, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data"
@@ -91,7 +92,7 @@ function PortfolioPage() {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`https://careerlens-1-2gm0.onrender.com/api/portfolio/${id}`, {
+      await axios.delete(`${API_BASE_URL}/api/portfolio/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -106,7 +107,7 @@ function PortfolioPage() {
   const handleLike = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.post(`https://careerlens-1-2gm0.onrender.com/api/portfolio/${id}/like`, {}, {
+      await axios.post(`${API_BASE_URL}/api/portfolio/${id}/like`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -121,7 +122,7 @@ function PortfolioPage() {
   const handleRate = async (id, value) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.post(`https://careerlens-1-2gm0.onrender.com/api/portfolio/${id}/rate`, {
+      await axios.post(`${API_BASE_URL}/api/portfolio/${id}/rate`, {
         rating: value
       }, {
         headers: {
@@ -390,7 +391,7 @@ function Card({ item, isOwner, onDelete, onEdit, onLike, onRate }) {
       <p className="text-slate-400 mb-4 line-clamp-2">{item.description}</p>
 
       <a
-        href={`https://careerlens-1-2gm0.onrender.com/${item.pdf}`}
+        href={`${API_BASE_URL}/${item.pdf}`}
         target="_blank"
         rel="noreferrer"
         className="inline-block mb-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-medium transition-all duration-300"

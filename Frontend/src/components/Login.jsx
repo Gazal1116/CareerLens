@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { API_BASE_URL } from "../config";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -18,7 +19,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await fetch("https://careerlens-1-2gm0.onrender.com/api/auth/login", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -15,7 +15,7 @@ function PortfolioPage() {
   }, []);
 
   const fetchData = async () => {
-    const res = await axios.get("http://localhost:5000/portfolio");
+    const res = await axios.get("https://careerlens-1-2gm0.onrender.com/portfolio");
     setPortfolios(res.data);
   };
 
@@ -30,12 +30,12 @@ function PortfolioPage() {
 
     if (editId) {
       await axios.put(
-        `http://localhost:5000/portfolio/${editId}`,
+        `https://careerlens-1-2gm0.onrender.com/portfolio/${editId}`,
         { title, description }
       );
       setEditId(null);
     } else {
-      await axios.post("http://localhost:5000/portfolio", formData);
+      await axios.post("https://careerlens-1-2gm0.onrender.com/portfolio", formData);
     }
 
     setTitle("");
@@ -45,17 +45,17 @@ function PortfolioPage() {
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/portfolio/${id}`);
+    await axios.delete(`https://careerlens-1-2gm0.onrender.com/portfolio/${id}`);
     fetchData();
   };
 
   const handleLike = async (id) => {
-    await axios.put(`http://localhost:5000/portfolio/${id}/like`);
+    await axios.put(`https://careerlens-1-2gm0.onrender.com/portfolio/${id}/like`);
     fetchData();
   };
 
   const handleRate = async (id, value) => {
-    await axios.put(`http://localhost:5000/portfolio/${id}/rate`, {
+    await axios.put(`https://careerlens-1-2gm0.onrender.com/portfolio/${id}/rate`, {
       rating: value
     });
     fetchData();
@@ -157,7 +157,7 @@ function Card({ item, isOwner, onDelete, onEdit, onLike, onRate }) {
       <p className="text-slate-400 mb-3">{item.description}</p>
 
       <a
-        href={`http://localhost:5000/uploads/${item.pdf}`}
+        href={`https://careerlens-1-2gm0.onrender.com/uploads/${item.pdf}`}
         target="_blank"
         rel="noreferrer"
         className="text-purple-400 underline"
