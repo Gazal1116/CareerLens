@@ -1,1 +1,1 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:5050";
+export const API_BASE_URL = import.meta.env.VITE_API_URL || "https://careerlens-1-2gm0.onrender.com";
