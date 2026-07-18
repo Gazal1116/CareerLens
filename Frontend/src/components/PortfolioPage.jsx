@@ -24,19 +24,42 @@ function PortfolioPage() {
     fetchData();
   }, []);
 
+  const getAuthHeader = () => {
+    const token = localStorage.getItem("token");
+    if (!token || token === "null" || token === "undefined") {
+      return null;
+    }
+    return { Authorization: `Bearer ${token}` };
+  };
+
+  const handleAuthFailure = (message) => {
+    if (message === "Token failed" || message === "Session expired, please login again") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userName");
+      alert("Session expired. Please login again.");
+      navigate("/login");
+      return true;
+    }
+    return false;
+  };
+
   const fetchData = async () => {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem("token");
+      const headers = getAuthHeader();
+      if (!headers) {
+        navigate("/login");
+        return;
+      }
       const res = await axios.get(`${API_BASE_URL}/api/portfolio`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers
       });
       setPortfolios(res.data.portfolios || []);
     } catch (err) {
       console.error("Error fetching portfolios:", err);
+      if (handleAuthFailure(err.response?.data?.message)) return;
       setError("Failed to load portfolios. Please make sure the backend is running.");
     } finally {
       setLoading(false);
@@ -47,7 +70,11 @@ function PortfolioPage() {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("token");
+      const headers = getAuthHeader();
+      if (!headers) {
+        navigate("/login");
+        return;
+      }
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
@@ -60,9 +87,7 @@ function PortfolioPage() {
           `${API_BASE_URL}/api/portfolio/${editId}`,
           { title, description },
           {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+            headers
           }
         );
         setEditId(null);
@@ -73,7 +98,7 @@ function PortfolioPage() {
         }
         await axios.post(`${API_BASE_URL}/api/portfolio/upload`, formData, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            ...headers,
             "Content-Type": "multipart/form-data"
           }
         });
@@ -85,53 +110,63 @@ function PortfolioPage() {
       fetchData();
     } catch (err) {
       console.error("Error submitting:", err);
+      if (handleAuthFailure(err.response?.data?.message)) return;
       alert("Error: " + (err.response?.data?.message || err.message));
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem("token");
+      const headers = getAuthHeader();
+      if (!headers) {
+        navigate("/login");
+        return;
+      }
       await axios.delete(`${API_BASE_URL}/api/portfolio/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers
       });
       fetchData();
     } catch (err) {
       console.error("Error deleting:", err);
+      if (handleAuthFailure(err.response?.data?.message)) return;
       alert("Error: " + (err.response?.data?.message || err.message));
     }
   };
 
   const handleLike = async (id) => {
     try {
-      const token = localStorage.getItem("token");
+      const headers = getAuthHeader();
+      if (!headers) {
+        navigate("/login");
+        return;
+      }
       await axios.post(`${API_BASE_URL}/api/portfolio/${id}/like`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers
       });
       fetchData();
     } catch (err) {
       console.error("Error liking:", err);
+      if (handleAuthFailure(err.response?.data?.message)) return;
       alert("Error: " + (err.response?.data?.message || err.message));
     }
   };
 
   const handleRate = async (id, value) => {
     try {
-      const token = localStorage.getItem("token");
+      const headers = getAuthHeader();
+      if (!headers) {
+        navigate("/login");
+        return;
+      }
       await axios.post(`${API_BASE_URL}/api/portfolio/${id}/rate`, {
         rating: value
       }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers
       });
       fetchData();
     } catch (err) {
       console.error("Error rating:", err);
+      if (handleAuthFailure(err.response?.data?.message)) return;
       alert("Error: " + (err.response?.data?.message || err.message));
     }
   };

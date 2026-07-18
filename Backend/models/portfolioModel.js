@@ -9,6 +9,17 @@ const portfolioSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    github: {
+      type: String,
+    },
+    liveDemo: {
+      type: String,
+    },
+    technologies: [
+      {
+        type: String,
+      },
+    ],
     pdf: {
       type: String,
       required: true,

@@ -35,7 +35,13 @@ app.get("/api/auth/profile" , protect , (req , res) =>{
 //-----------RESUME UPLOAD-------------
 app.post("/api/auth/resume/upload",protect,upload.single("file"),async(req,res) => {
   try{
-    const {title,description} = req.body;
+    const {
+  title,
+  description,
+  github,
+  liveDemo,
+  technologies,
+} = req.body;
     if(!req.file) {
       return res.status(400).json({message:"No file upload"});
     }
@@ -174,7 +180,7 @@ app.post(
   upload.single("file"),
   async (req, res) => {
     try {
-      const { title, description } = req.body;
+      const { title, description, github, liveDemo, technologies } = req.body;
 
       if (!req.file) {
         return res.status(400).json({
@@ -185,6 +191,11 @@ app.post(
       const newPortfolio = new Portfolio({
         title,
         description,
+        github,
+        liveDemo,
+        technologies: technologies
+          ? technologies.split(",").map((tech) => tech.trim())
+          : [],
         pdf: req.file.path,
         user: req.user.id,
       });
@@ -206,7 +217,9 @@ app.post(
 // ----------- GET ALL PORTFOLIOS -------------
 app.get("/api/portfolio", async (req, res) => {
   try {
-    const portfolios = await Portfolio.find().populate("user", "name");
+    const portfolios = await Portfolio.find()
+  .populate("user", "name email")
+  .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -223,7 +236,9 @@ app.get("/api/portfolio", async (req, res) => {
 // ----------- MY PORTFOLIOS -------------
 app.get("/api/portfolio/my", protect, async (req, res) => {
   try {
-    const portfolios = await Portfolio.find({ user: req.user.id });
+    const portfolios = await Portfolio.find({
+  user: req.user.id,
+}).sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -238,7 +253,11 @@ app.get("/api/portfolio/my", protect, async (req, res) => {
 });
 
 app.post("/api/portfolio/:id/like", protect, async (req, res) => {
-  const portfolio = await Portfolio.findById(req.params.id);
+  if (!portfolio) {
+  return res.status(404).json({
+    message: "Portfolio not found",
+  });
+}
 
   const alreadyLiked = portfolio.likes.includes(req.user.id);
 
@@ -315,8 +334,14 @@ app.put("/api/portfolio/:id", protect, async (req, res) => {
   }
 
   
-  portfolio.title = req.body.title || portfolio.title;
-  portfolio.description = req.body.description || portfolio.description;
+portfolio.title = req.body.title || portfolio.title;
+portfolio.description = req.body.description || portfolio.description;
+portfolio.github = req.body.github || portfolio.github;
+portfolio.liveDemo = req.body.liveDemo || portfolio.liveDemo;
+
+portfolio.technologies = req.body.technologies
+  ? req.body.technologies.split(",").map((tech) => tech.trim())
+  : portfolio.technologies;
 
   await portfolio.save();
 
